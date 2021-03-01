@@ -1,0 +1,86 @@
+<!-- Begin Slider With Category Menu Area -->
+            <div class="slider-with-banner">
+                <div class="container">
+                    <div class="row">
+                        <!-- Begin Category Menu Area -->
+                        <div class="col-lg-3">
+                            <!--Category Menu Start-->
+                            <div class="category-menu">
+                                <div class="category-heading">
+                                    <h2 class="categories-toggle"><span>categories</span></h2>
+                                </div>
+                                
+                                <div id="cate-toggle" class="category-menu-list"> 
+                                    {% for product in allProds  %}
+                                    
+                                        <li><a href="{%url 'category_product' id=product.0.id slug=product.0.id %}">{{product.0.category}}</a></li>                                       
+                                        <ul>    
+                                            <li class="right-menu"><a href="">{{ node.title }}</a>
+                                                     {% if not node.is_leaf_node %}  
+                                                <ul class="cat-mega-menu">
+                                                    <li class="right-menu cat-mega-title">
+                                                        
+                                                       <a href="">Sub Category</a>
+                                                       {%for p in product%}
+                                                        <ul>
+                                                            <li><a href="{%url 'product_single' id=p.id %}"> {{p.subcategory}} </a></li>
+                                                      
+                                                        </ul>
+                                                        {%endfor%}
+                                                    </li>
+                                                   
+                                                </ul>
+                                                   {% endif %}
+                                                   
+                                            </li>
+                                            
+                                                  
+                                        </ul> 
+                                    {%endfor%} 
+                                    
+                                            
+                                        
+                                </div>
+                                
+                                
+                               
+                            </div>
+                            <!--Category Menu End-->
+                        </div>
+                        <!-- Category Menu Area End Here -->
+                        <!-- Begin Slider Area -->
+                        <div class="col-lg-9">
+                            <div class="slider-area pt-sm-30 pt-xs-30">
+                                <div class="slider-active owl-carousel">
+                                    <!-- Begin Single Slide Area -->
+                                    {% for p in sliding_images %}
+                                    	
+                                    
+                                    <div class="single-slide align-center-left animation-style-02 bg-4">
+                                    	<img src="{{p.image.url}}" style="height: 550px;" alt="">
+                                        <div class="slider-progress"></div>
+                                        <div class="slider-content">
+                                            <h5>Sale Offer <span>-20% Off</span> This Week</h5>
+                                            <h2>{{p.title}}
+                                        </h2>
+                                            <h3>Starting at <span>${{p.new_price}}</span></h3>
+                                            <div class="default-btn slide-btn">
+                                                <a class="links" href="{%url 'product_single' id=p.id%}">Shopping Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    <!-- Single Slide Area End Here -->
+                                    <!-- Begin Single Slide Area -->
+                         
+                                    <!-- Single Slide Area End Here -->
+                                    <!-- Begin Single Slide Area -->
+                        
+                                    <!-- Single Slide Area End Here -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slider Area End Here -->
+                    </div>
+                </div>
+            </div>

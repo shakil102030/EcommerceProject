@@ -1,0 +1,103 @@
+  
+  {%extends 'home.html'%}
+
+{%load static%}
+
+
+
+    {% block titlee %}
+       single product
+                
+     {% endblock titlee %}
+
+
+
+     {% block description %}
+     {{setting.description}}
+            
+        {% endblock description %}
+
+
+        {% block keyword %}
+            
+        {% endblock keyword %}
+
+
+
+        
+
+             {% block container %}
+
+
+
+
+
+  <div class="breadcrumb-area">
+                <div class="container">
+                    <div class="breadcrumb-content">
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active"> Register</li>
+                        </ul>
+                    </div>
+                        <div>
+    {%if messages %} {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">
+        {{message}}
+    </div>
+    {% endfor %} {% endif %}
+</div>
+                </div>
+            </div>
+            <!-- Li's Breadcrumb Area End Here -->
+            <!-- Begin Login Content Area -->
+            <div class="page-section mb-60">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+                            <form role="form" method="post">
+                                {% csrf_token %} 
+                                <div class="login-form">
+                                    <h4 class="login-title">Register</h4>
+                                    {% for error in form.non_field_errors %}
+                                    <div class="col-12 mb-8">
+                                        {{error}}
+                                    </div>
+                                    {% endfor %} 
+                                    {% for field in form %}
+                                    <div class="col-12 mb-8">
+                                        {{field.errors}}
+                                    </div>
+                                    <div class="col-12 mb-8">
+                                    </div>
+                                    <div class="form-group">
+                                        {{field}}
+                                    </div>
+                                    {% endfor %}
+                                    <button type="submit" class="btn btn-lg btn-success btn-block">Signup</button>
+                                    </fieldset>
+                                    <br>
+                                    <div class="form-group text-center">
+                                        <h5> Already have an account!
+                                        <a href="{% url 'UserLogin' %}">Login</a> instead</h5>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Login Content Area End Here -->
+
+
+
+             {% endblock container %}
+
+
+
+
+                   <!-- {% block footer %}
+
+            {% include "footer.html" %}
+                
+            {% endblock footer %}-->

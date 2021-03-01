@@ -1,0 +1,83 @@
+{% extends 'home.html' %}
+{% load static %}
+                {% block container %}
+            <!-- Begin Li's Breadcrumb Area -->
+            <div class="breadcrumb-area">
+                <div class="container">
+                    <div class="breadcrumb-content">
+                        <ul>
+                            <li><a href="{%url 'home'%}">Home</a></li>
+                            <li class="active">Blog</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Li's Breadcrumb Area End Here -->
+            <!-- Begin Li's Main Blog Page Area -->
+            <div class="li-main-blog-page pt-60 pb-55">
+                <div class="container">
+                    <div class="row">
+                        <!-- Begin Li's Main Content Area -->
+                        <div class="col-lg-12">
+                            <div class="row li-main-content">
+                                {% for p in page_obj %}
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="li-blog-single-item pb-25">
+                                        <div class="li-blog-banner">
+                                            <a href="{%url 'BlogGridDetails' id=p.id%}"><img class="img-full" src="{{p.imageurl}}" style="height: 250px;" alt=""></a>
+                                        </div>
+                                        <div class="li-blog-content">
+                                            <div class="li-blog-details">
+                                                <h3 class="li-blog-heading pt-25"><a href="blog-details-left-sidebar.html">{{p.blogcategory}}</a></h3>
+                                                <div class="li-blog-meta">
+                                                    <a class="author" href="#"><i class="fa fa-user"></i>{{p.authorname}}</a>
+                                                    <a class="comment" href="#"><i class="fa fa-comment-o"></i> 3 comment</a>
+                                                    <a class="post-time" href="#"><i class="fa fa-calendar"></i>{{p.created_at}}</a>
+                                                </div>
+                                                <p>{{p.details}}</p>
+                                                <a class="read-more" href="{%url 'BlogGridDetails' id=p.id%}">Read More...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                
+                               
+                                
+                                
+                                
+                                <!-- Begin Li's Pagination Area -->
+                                <div class="col-lg-12">
+                                    <div class="li-paginatoin-area text-center pt-25">
+                                        <div class="row">
+                                            <div class="col-lg-12">                                               
+                                                <span class="step-links">
+                                                    {% if page_obj.has_previous %}
+                                                        <a href="?page=1">&laquo; first</a>
+                                                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                                    {% endif %}
+                                            
+                                                    <span class="current">
+                                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                                    </span>
+                                            
+                                                    {% if page_obj.has_next %}
+                                                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                                                    {% endif %}
+                                                </span>
+                                   
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </div>
+                                <!-- Li's Pagination End Here Area -->
+                            </div>
+                        </div>
+                        <!-- Li's Main Content Area End Here -->
+                    </div>
+                </div>
+            </div>
+            <!-- Li's Main Blog Page Area End Here -->
+            {% endblock container %}
+            
