@@ -21,8 +21,6 @@ def UserSignUp(request):
             user.username = user.email.split('@')[0]
             user.set_password(form.cleaned_data['password'])
             user.save()
-            userprfile = UserProfile.objects.create(user=user)
-            userprfile.save()
 
             return redirect('UserLogin')
         else:

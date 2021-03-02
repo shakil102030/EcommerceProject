@@ -241,7 +241,7 @@ def OrderCart(request):
                         'country': dat.country,
                         },
                     },
-                    amount=total_amount,
+                    amount=total_amount*100,
                     currency='usd',
                     #payment_method_types=['card'],
                     card=payment_form.cleaned_data['stripe_id'],

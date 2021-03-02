@@ -10,12 +10,15 @@
                                     <h2 class="categories-toggle"><span>categories</span></h2>
                                 </div>
                                 
-                                <div id="cate-toggle" class="category-menu-list"> 
-                                    {% for product in allProds  %}
-                                    
-                                        <li><a href="{%url 'category_product' id=product.0.id slug=product.0.id %}">{{product.0.category}}</a></li>                                       
-                                        <ul>    
+                                <div id="cate-toggle" class="category-menu-list">
+                                        {% for product in allProds  %}
+                                        <li><a href="{%url 'category_product' id=product.0.id slug=product.0.id %}">{{product.0.category}}</a></li>								
+                                                                        
+                                        <ul>  
+                                            
+                                               										
                                             <li class="right-menu"><a href="">{{ node.title }}</a>
+											
                                                      {% if not node.is_leaf_node %}  
                                                 <ul class="cat-mega-menu">
                                                     <li class="right-menu cat-mega-title">
@@ -33,10 +36,12 @@
                                                    {% endif %}
                                                    
                                             </li>
+											
                                             
                                                   
                                         </ul> 
-                                    {%endfor%} 
+										{%endfor%} 
+                                    
                                     
                                             
                                         
