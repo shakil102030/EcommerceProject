@@ -1,7 +1,7 @@
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
 import admin_thumbnails
-from .models import Category, Product, Images, Comment, Color, Size, Variants, SubCategory
+from .models import Category, Product, Images, Comment, Color, Size, Variants
 
 class CategoryAdmin(DraggableMPTTAdmin):
     mptt_indent_field = "title"
@@ -76,7 +76,6 @@ class VariantsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(SubCategory)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Color, ColorAdmin)

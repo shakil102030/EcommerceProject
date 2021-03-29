@@ -1,30 +1,17 @@
-     {%extends 'home.html'%}
+{%extends 'home.html'%}
 {%load static%}
-
-
 {% block titlee %}
-single product
-         
+    single product
 {% endblock titlee %}
-
-
-
 {% block description %}
-{{setting.description}}
-     
- {% endblock description %}
-
-
- {% block keyword %}
-     
- {% endblock keyword %}
-
-
-
-          
-    {% block slider %}
-        {% include "slider.html" %}
-    {%endblock%}
+    {{setting.description}}
+{% endblock description %}
+{% block keyword %}
+            
+{% endblock keyword %}
+{% block slider %}
+    {% include "slider.html" %}
+{%endblock%}
 
              {% block container %}
 
@@ -50,24 +37,11 @@ single product
                                         <!-- shop-item-filter-list end -->
                                     </div>
                                     <div class="toolbar-amount">
-                                        <span>Showing 1 to 9 of 15</span>
+                                        <span>Showing 1 to {{product_count}} of 15</span>
                                     </div>
                                 </div>
                                 <!-- product-select-box start -->
-                                <div class="product-select-box">
-                                    <div class="product-short">
-                                        <p>Sort By:</p>
-                                        <select class="nice-select">
-                                            <option value="trending">Relevance</option>
-                                            <option value="sales">Name (A - Z)</option>
-                                            <option value="sales">Name (Z - A)</option>
-                                            <option value="rating">Price (Low &gt; High)</option>
-                                            <option value="date">Rating (Lowest)</option>
-                                            <option value="price-asc">Model (A - Z)</option>
-                                            <option value="price-asc">Model (Z - A)</option>
-                                        </select>
-                                    </div>
-                                </div>
+                               
                                 <!-- product-select-box end -->
                             </div>
                             <!-- shop-top-bar end -->
@@ -113,8 +87,10 @@ single product
                                                             <div class="add-actions">
                                                                 <ul class="add-actions-link">
                                                                     <li class="add-cart active"><a href="{%url 'AddtoShopingcart' id=p.id%}">Add to cart</a></li>
-                                                                    <li><a href="#" title="quick view" class="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-eye"></i></a></li>
-                                                                    <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
+                                                                    <li><a class="links-details" href="{%url 'orderproduct'%}"><i
+                                                                        class="fa fa-shopping-cart"></i></a></li>
+                                                                    <li><a class="links-details" href=""><i class="fa fa-heart-o"></i></a></li>
+                                                                    
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -148,11 +124,11 @@ single product
                                                                     </h5>
                                                                     <div class="rating-box">
                                                                         <ul class="rating">
-                                                                            <li><i class="fa fa-star-o"></i></li>
-                                                                            <li><i class="fa fa-star-o"></i></li>
-                                                                            <li><i class="fa fa-star-o"></i></li>
-                                                                            <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                            <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                                            <li><i class="fa fa-star{%if p.average_review < 1%}-o{%endif%}"></i></li>
+                                                                            <li><i class="fa fa-star{%if p.average_review < 2%}-o{%endif%}"></i></li>
+                                                                            <li><i class="fa fa-star{%if p.average_review < 3%}-o{%endif%}"></i></li>
+                                                                            <li><i class="fa fa-star{%if p.average_review < 4%}-o{%endif%}"></i></li>
+                                                                            <li><i class="fa fa-star{%if p.average_review < 5%}-o{%endif%}"></i></li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -168,8 +144,8 @@ single product
                                                         <div class="shop-add-action mb-xs-30">
                                                             <ul class="add-actions-link">
                                                                 <li class="add-cart"><a href="{%url 'AddtoShopingcart' id=p.id%}">Add to cart</a></li>
-                                                                <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                                <li><a class="quick-view" data-toggle="modal" data-target="#exampleModalCenter" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
+                                                                <li class="wishlist"><a href=""><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
+                                                                
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -184,19 +160,30 @@ single product
                                         <div class="row">
                                             <div class="col-lg-12">                                               
                                                 <span class="step-links">
-                                                    {% if page_obj.has_previous %}
-                                                        <a href="?page=1">&laquo; first</a>
-                                                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                                                    {% endif %}
+                                                    <!-- Pagination -->
+                                                
+
+                                                <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+                                                    <ul class="pagination pagination-template d-flex justify-content-center">
+    
+                                                        {% if page_obj.has_previous %}
+                                                        <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link"> <i class="fa fa-angle-left"></i></a></li>
+                                                        <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link ">{{ page_obj.previous_page_number }}</a></li>
+                                                        {% endif %}
                                             
-                                                    <span class="current">
-                                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                                                    </span>
-                                            
-                                                    {% if page_obj.has_next %}
-                                                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                                                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                                                    {% endif %}
+                                            {% if request.GET.page == None %}
+                                                        <li class="page-item"><a href="#" class="page-link active">1</a></li>
+                                            {% else %}
+                                                        <li class="page-item"><a href="#" class="page-link active">{{ request.GET.page }}</a></li>
+                                            {% endif %}
+    
+                                                        {% if page_obj.has_next %}
+                                                        <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link ">{{ page_obj.next_page_number }}</a></li>
+                                                        <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link"> <i class="fa fa-angle-right"></i></a></li>
+                                                        {% endif %}
+    
+                                                    </ul>
+                                                    </nav>
                                                 </span>
                                    
                                             </div>

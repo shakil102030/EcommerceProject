@@ -16,7 +16,7 @@ class Category(MPTTModel):
     title = models.CharField(max_length=190)
     keywords = models.CharField(blank = True, max_length=100)
     description = models.TextField(blank = True)
-    image = models.ImageField(blank=True, upload_to='category_img/')
+    image = models.ImageField(blank = True, upload_to='category_img/cat_image')
     status = models.CharField(max_length=30, choices=status)
     slug = models.SlugField(null=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,23 +28,7 @@ class Category(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['title']
         
-class SubCategory(MPTTModel):
-    status = (
-        ('True', 'True'),
-        ('False', 'False'),
-    )
-    parent = TreeForeignKey('self',  null=True, blank=True, on_delete=models.CASCADE, related_name='children')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    title = models.CharField(blank=True, max_length=190)
-    keywords = models.CharField(blank=True, max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.title
-
-    class MPTTMeta:
-        order_insertion_by = ['title']
 
 
 
@@ -68,7 +52,6 @@ class Product(models.Model):
     )
     
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     title = models.CharField(max_length=190)
     keywords = models.CharField(blank = True, max_length=100)
     description = models.TextField(blank = True)
@@ -77,7 +60,7 @@ class Product(models.Model):
     old_price = models.DecimalField(decimal_places=2, max_digits=15)
     amount = models.IntegerField(default=0)
     min_amount = models.IntegerField(default=3)
-    image = models.ImageField(blank=True, upload_to='product_image/')
+    image = models.ImageField(upload_to='product_image/pro_img')
     variant = models.CharField(max_length=10, choices=VARIANTS, default='None')
     product_status = models.CharField(max_length=30, choices=ProductStatus)
     status = models.CharField(max_length=30, choices=status)
@@ -113,7 +96,7 @@ class Product(models.Model):
 class Images(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=True)
-    image = models.ImageField(blank=True, upload_to='product_img/')
+    image = models.ImageField(upload_to='product_img/images')
 
     def __str__(self):
         return self.title

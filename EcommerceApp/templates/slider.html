@@ -1,3 +1,5 @@
+{% load ecomtag %}
+{% ecom_catgoryproducts as allProds %}
 <!-- Begin Slider With Category Menu Area -->
             <div class="slider-with-banner">
                 <div class="container">
@@ -9,50 +11,39 @@
                                 <div class="category-heading">
                                     <h2 class="categories-toggle"><span>categories</span></h2>
                                 </div>
-                                
                                 <div id="cate-toggle" class="category-menu-list">
-                                        {% for product in allProds  %}
-                                        <li><a href="{%url 'category_product' id=product.0.id slug=product.0.id %}">{{product.0.category}}</a></li>								
-                                                                        
-                                        <ul>  
-                                            
-                                               										
-                                            <li class="right-menu"><a href="">{{ node.title }}</a>
-											
-                                                     {% if not node.is_leaf_node %}  
-                                                <ul class="cat-mega-menu">
-                                                    <li class="right-menu cat-mega-title">
-                                                        
-                                                       <a href="">Sub Category</a>
-                                                       {%for p in product%}
-                                                        <ul>
-                                                            <li><a href="{%url 'product_single' id=p.id %}"> {{p.subcategory}} </a></li>
-                                                      
-                                                        </ul>
-                                                        {%endfor%}
-                                                    </li>
-                                                   
-                                                </ul>
-                                                   {% endif %}
-                                                   
-                                            </li>
-											
-                                            
-                                                  
-                                        </ul> 
-										{%endfor%} 
-                                    
-                                    
-                                            
+                 
+                            {%load ecomtag%}
+                          {%ecom_cat as category%}
+
+                                        {% load mptt_tags %}
                                         
+                                    <ul>
+                                        {% recursetree category %}
+                                      
+                                        <li class="right-menu"><a href="{%url 'category_product' id=node.id slug=node.id %}">{{ node.title }}</a>
+                                             {% if not node.is_leaf_node %}  
+                                            <ul class="cat-mega-menu">
+                                                <li class="right-menu cat-mega-title">
+                                                   <a href="">Sub Category</a>
+                                                    <ul>
+                                                        <li><a href="{%url 'category_product' id=node.id slug=node.slug %}">{{ children }}</a></li>
+                                                  
+                                                    </ul>
+                                                </li>
+                                               
+                                            </ul>
+                                               {% endif %}
+                                        </li>
+                                       {% endrecursetree %} 
+                                      
+                                    </ul>
                                 </div>
-                                
-                                
-                               
                             </div>
                             <!--Category Menu End-->
                         </div>
                         <!-- Category Menu Area End Here -->
+                      
                         <!-- Begin Slider Area -->
                         <div class="col-lg-9">
                             <div class="slider-area pt-sm-30 pt-xs-30">
@@ -76,10 +67,6 @@
                                     </div>
                                     {% endfor %}
                                     <!-- Single Slide Area End Here -->
-                                    <!-- Begin Single Slide Area -->
-                         
-                                    <!-- Single Slide Area End Here -->
-                                    <!-- Begin Single Slide Area -->
                         
                                     <!-- Single Slide Area End Here -->
                                 </div>

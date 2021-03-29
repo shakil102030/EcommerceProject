@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'adminlte3',
      # Optional: Django admin theme (must be before django.contrib.admin)
     'adminlte3_theme',
+    'crispy_forms',
+    #'django_ses',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     'EcommOrder',
     'Blog',
     'StripeApp',
+    'mptt',
 ]
 
 
@@ -67,6 +71,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                "django.contrib.auth.context_processors.auth",     
+               
             ],
         },
     },
@@ -133,6 +140,11 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = MEDIA_DIR
 
+
+
+FROM_EMAIL = 'raziaromi50@gmail.com' # replace with your address
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
@@ -164,6 +176,10 @@ CKEDITOR_CONFIGS = {
 }
 
 ###################################
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 
 
 

@@ -13,9 +13,6 @@ class UserProfile(models.Model):
 	def __str__(self):
 		return self.user.username
 
-	#def __str__(self):
-        #return self.user.first_name + " " + self.user.last_name
-
 	def UserName(self):
 		return self.user.first_name+' '+ self.user.last_name+'['+self.user.username+']'
 	
@@ -25,9 +22,7 @@ class UserProfile(models.Model):
 		else:
 			return ""
 
-	def ImageTag(self):
-		return mark_safe('<img src="{}" heights="50" width="50" />'.format(self.image.url))
-	ImageTag.short_description='Image'
+	
 
 
 

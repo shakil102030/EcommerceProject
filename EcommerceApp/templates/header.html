@@ -1,6 +1,14 @@
 {%load static%}
-<!-- Begin Header Area -->
+{% load ecomtag %}
+{%ecom_cat as category%}
+{% ecom_set as setting %}
+{% ecom_shopcart user.id as productcart %}
+{% ecom_totalamount user.id as totalamount %}
+{% ecom_totalquantity user.id as totalquantity %}
+{% ecom_totalorderquantity user.id as totalorderquantity %}
+{% ecom_catgoryproducts as allProds %}
 
+<!-- Begin Header Area -->
 <!--setting-->
 <header class="li-header-4">
     <!-- Begin Header Top Area -->
@@ -26,14 +34,14 @@
                                 <div class="setting ht-setting">
                                     <ul class="ht-setting-list">
 
-                                        {% if user.is_authenticated %}
+                                        {%if user.is_authenticated%} 
                                         <li><a href="">hi {{request.user.username}}</a></li>
                                         <li><a href="{%url 'UserLogout'%}">Logout</a></li>
                                         <li><a href="{%url 'OrderCart'%}">Checkout</a></li>
-                                        {% else %}
+                                        {%else%}
                                         <li><a href="{%url 'UserLogin'%}">Login</a></li>
                                         <li><a href="{%url 'UserSignUp'%}">Register</a></li>
-                                        {% endif %}
+                                        {%endif%}
                                     </ul>
                                 </div>
                             </li>
@@ -44,8 +52,8 @@
                                 <div class="ht-currency-trigger"><span>USD $</span></div>
                                 <div class="currency ht-currency">
                                     <ul class="ht-setting-list">
-                                        <li><a href="#">EUR €</a></li>
-                                        <li class="active"><a href="#">USD $</a></li>
+                                        <li><a href="">EUR €</a></li>
+                                        <li class="active"><a href="">USD $</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -56,7 +64,7 @@
                                 <div class="ht-language-trigger"><span>English</span></div>
                                 <div class="language ht-language">
                                     <ul class="ht-setting-list">
-                                        <li class="active"><a href="#"><img
+                                        <li class="active"><a href=""><img
                                                     src="{%static ''%}images/menu/flag-icon/1.jpg" alt="">English</a>
                                         </li>
                                         <li><a href="#"><img src="{%static ''%}images/menu/flag-icon/2.jpg"
@@ -94,12 +102,15 @@
                         {%csrf_token%}
                         <select name="cat_id" class="nice-select select-search-category">
                             <option value="0">All</option>
-                            {% for product in allProds  %}
-                            <option value="{{product.0.category.id}}">{{product.0.category}}</option> 
-                                {%for p in product%}                    
-                            <option value="{{p.id}}">- - {{p.subcategory}}</option>  
-                                {%endfor%}
-                            {%endfor%}   
+                            {%load ecomtag%}
+                            {%ecom_cat as category%}
+                            {% load mptt_tags %}
+                            {% recursetree category %}
+                            <option value="{{node.id}}">{{ node.title }}</option> 
+                                {% if not node.is_leaf_node %}                     
+                            <option value="{{node.id}}">--{{ children }}</option>  
+                                {% endif %}
+                            {% endrecursetree %}   
                             
                         </select>
                         <input type="text" placeholder="Enter your search key ..." id="query" name="query">
@@ -109,11 +120,11 @@
                     <!-- Begin Header Middle Right Area -->
                     <div class="header-middle-right">
                         <ul class="hm-menu">
-                            <!-- Begin Header Middle Wishlist Area -->
+                            <!--Begin Header Middle Wishlist Area-->
                             <li class="hm-wishlist">
                                 <a href="{%url 'orderproduct'%}">
-                                    <span class="cart-item-count wishlist-item-count">*{{totalorderquantity}}</span>
-                                    <i class="fa fa-heart-o"></i>
+                                    <span class="fa fa-shopping-cart">*{{totalorderquantity}}</span>
+                                   
                                 </a>
                             </li>
                             <!-- Header Middle Wishlist Area End Here -->
@@ -131,11 +142,11 @@
                                     <ul class="minicart-product-list">
                                         {% for p in productcart %}
                                         <li>
-                                            <a href="{%url 'product_single' id=p.id%}" class="minicart-product-image">
-                                                <img src="{{p.product.image.url}}">
+                                            <a href="" class="minicart-product-image">
+                                                <img src="{{p.product.image.url}}" style="height: 30px;">
                                             </a>
                                             <div class="minicart-product-details">
-                                                <h6><a href="{%url 'product_single' id=p.id%}">{{p.product.title}}</a></h6>
+                                            <h6><a href="">{{p.product.title}}</a></h6>
                                                 <span>${{p.product.new_price}} x {{p.quantity}}</span>
                                             </div>
                                             <td class="li-product-remove"><a href="{%url 'delete_from_cart' id=p.id%}"><i class="fa fa-times"></i></a></td>

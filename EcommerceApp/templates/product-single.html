@@ -1,23 +1,14 @@
- {%extends 'home.html'%}
- {%load static%}
-
-
- {% block titlee %}
- single product
-
- {% endblock titlee %}
-
-
-
- {% block description %}
- {{setting.description}}
-
- {% endblock description %}
-
-
- {% block keyword %}
-
- {% endblock keyword %}
+{%extends 'home.html'%}
+{%load static%}
+{% block titlee %}
+    single product
+{% endblock titlee %}
+{% block description %}
+    {{setting.description}}
+{% endblock description %}
+{% block keyword %}
+            
+{% endblock keyword %}
 
 
  {% block container %}
@@ -82,7 +73,7 @@
                  <div class="product-details-view-content pt-60">
                      <div class="product-info">
                          <h2>{{single_product.title}}</h2>
-                         <span class="product-details-ref">Reference: demo_15</span>
+                         
                          <div class="rating-box pt-20">
                              <ul class="rating rating-with-review-item">
                                  <li><i class="fa fa-star{%if single_product.average_review < 1%}-o{%endif%}"></i></li>
@@ -90,8 +81,7 @@
                                  <li><i class="fa fa-star{%if single_product.average_review < 3%}-o{%endif%}"></i></li>
                                  <li><i class="fa fa-star{%if single_product.average_review < 4%}-o{%endif%}"></i></li>
                                  <li><i class="fa fa-star{%if single_product.average_review < 5%}-o{%endif%}"></i></li>
-                                 <li class="review-item"><a href="#">Read Review</a></li>
-                                 <li class="review-item"><a href="#">Write Review</a></li>
+                                 
                              </ul>
                          </div>
                          <div class="price-box pt-20">
@@ -104,17 +94,7 @@
                              </p>
                          </div>
                              
-                                  <div class="product-variants">
-                                        <div class="produt-variants-size">
-
-                                            <label>Dimension</label>
-                                            <select class="nice-select name='' ">
-                                                <option value="1" title="S" selected="selected">40x60cm</option>
-                                                <option value="2" title="M">60x90cm</option>
-                                                <option value="3" title="L">80x120cm</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                 
                          
 
                                
@@ -141,45 +121,16 @@
                          </div>
                          <br/>
                          <div class="product-additional-info pt-25">
-                             <a class="wishlist-btn" href="wishlist.html"><i class="fa fa-heart-o"></i>Add to
-                                 wishlist</a>
+                            
                              <div class="product-social-sharing pt-25">
                                  <ul>
-                                     <li class="facebook"><a href="#"><i class="fa fa-facebook"></i>Facebook</a></li>
-                                     <li class="twitter"><a href="#"><i class="fa fa-twitter"></i>Twitter</a></li>
-                                     <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i>Google +</a>
+                                     <li class="facebook"><a href="{{setting.facebook}}"><i class="fa fa-facebook"></i>Facebook</a></li>
+                                     <li class="twitter"><a href="{{setting.twitter}}"><i class="fa fa-twitter"></i>Twitter</a></li>
+                                     <li class="google-plus"><a href="https://www.plus.google.com/discover"><i class="fa fa-google-plus"></i>Google +</a>
                                      </li>
-                                     <li class="instagram"><a href="#"><i class="fa fa-instagram"></i>Instagram</a></li>
+                                     <li class="instagram"><a href="{{setting.instagram}}"><i class="fa fa-instagram"></i>Instagram</a></li>
                                  </ul>
                              </div>
-                         </div>
-                         <div class="block-reassurance">
-                             <ul>
-                                 <li>
-                                     <div class="reassurance-item">
-                                         <div class="reassurance-icon">
-                                             <i class="fa fa-check-square-o"></i>
-                                         </div>
-                                         <p>Security policy (edit with Customer reassurance module)</p>
-                                     </div>
-                                 </li>
-                                 <li>
-                                     <div class="reassurance-item">
-                                         <div class="reassurance-icon">
-                                             <i class="fa fa-truck"></i>
-                                         </div>
-                                         <p>Delivery policy (edit with Customer reassurance module)</p>
-                                     </div>
-                                 </li>
-                                 <li>
-                                     <div class="reassurance-item">
-                                         <div class="reassurance-icon">
-                                             <i class="fa fa-exchange"></i>
-                                         </div>
-                                         <p> Return policy (edit with Customer reassurance module)</p>
-                                     </div>
-                                 </li>
-                             </ul>
                          </div>
                      </div>
                  </div>
@@ -195,8 +146,6 @@
              <div class="col-lg-12">
                  <div class="li-product-tab">
                      <ul class="nav li-product-menu">
-                         <li><a class="active" data-toggle="tab" href="#description"><span>Description</span></a></li>
-                         <li><a data-toggle="tab" href="#product-details"><span>Product Details</span></a></li>
                          <li><a data-toggle="tab" href="#reviews"><span>Reviews</span></a></li>
                      </ul>
                  </div>
@@ -209,15 +158,7 @@
                      <span>{{single_product.detail}}</span>
                  </div>
              </div>
-             <div id="product-details" class="tab-pane" role="tabpanel">
-                 <div class="product-details-manufacturer">
-                     <a href="#">
-                         <img src="{{single_product.image.url}}" style="height: 150px;" alt="Product Manufacturer Image">
-                     </a>
-                     <p><span>Reference</span> demo_7</p>
-                     <p><span>Reference</span> demo_7</p>
-                 </div>
-             </div>
+            
              <div id="reviews" class="tab-pane" role="tabpanel">
                  <div class="product-reviews">
                      <div class="product-details-comment-block">
@@ -263,8 +204,7 @@
                                                  <div class="li-review-product">
                                                      <img src="{{single_product.image.url}}" style="height: 150px;" alt="Li's Product">
                                                      <div class="li-review-product-desc">
-                                                         <p class="li-product-name">Today is a good day Framed poster
-                                                         </p>
+                                                         <p class="li-product-name">{{single_product.title}}</p>
                                                          <p>
                                                             <span>{{single_product.description}}</span>
                                                          </p>
@@ -278,58 +218,58 @@
                                                          <div class="feedback">
                                                              <h3 class="feedback-title">Our Feedback</h3>
                                                              <form action="{%url 'AddComment' id=single_product.id%}"
-                                                                 method="POST">
-                                                                 {% csrf_token %}
-                                                                 <div class="feedback-input">
-                                                                     <p class="your-opinion">
-                                                                         <label>Your Rating</label>
-                                                                         <span>
-                                                                             <select class="star-rating" name="rate">
-                                                                                 <option value="1" name="rate">1
-                                                                                 </option>
-                                                                                 <option value="2" name="rate">2
-                                                                                 </option>
-                                                                                 <option value="3" name="rate">3
-                                                                                 </option>
-                                                                                 <option value="4" name="rate">4
-                                                                                 </option>
-                                                                                 <option value="5" name="rate">5
-                                                                                 </option>
-                                                                             </select>
-                                                                         </span>
-                                                                     </p>
-                                                                     <p class="feedback-form-author">
-                                                                         <label for="author">Subject<span
-                                                                                 class="required">*</span>
-                                                                         </label>
-                                                                         <input id="author" name="subject" value=""
-                                                                             size="30" aria-required="true" type="text">
-                                                                     </p>
-                                                                     <p class="feedback-form">
-                                                                         <label for="feedback">Your Review</label>
-                                                                         <textarea id="feedback" name="comment"
-                                                                             cols="45" rows="8"
-                                                                             aria-required="true"></textarea>
-                                                                     </p>
+                                                             method="POST">
+                                                             {% csrf_token %}
+                                                             <div class="feedback-input">
+                                                                 <p class="your-opinion">
+                                                                     <label>Your Rating</label>
+                                                                     <span>
+                                                                         <select class="star-rating" name="rate">
+                                                                             <option value="1" name="rate">1
+                                                                             </option>
+                                                                             <option value="2" name="rate">2
+                                                                             </option>
+                                                                             <option value="3" name="rate">3
+                                                                             </option>
+                                                                             <option value="4" name="rate">4
+                                                                             </option>
+                                                                             <option value="5" name="rate">5
+                                                                             </option>
+                                                                         </select>
+                                                                     </span>
+                                                                 </p>
+                                                                 <p class="feedback-form-author">
+                                                                     <label for="author">Subject<span
+                                                                             class="required">*</span>
+                                                                     </label>
+                                                                     <input id="author" name="subject" value=""
+                                                                         size="30" aria-required="true" type="text">
+                                                                 </p>
+                                                                 <p class="feedback-form">
+                                                                     <label for="feedback">Your Review</label>
+                                                                     <textarea id="feedback" name="comment"
+                                                                         cols="45" rows="8"
+                                                                         aria-required="true"></textarea>
+                                                                 </p>
 
-                                                                     <div class="feedback-btn pb-15">
-                                                                         <a href="#" class="close" data-dismiss="modal"
-                                                                             aria-label="Close">Close</a>
-
-                                                                     </div>
-
-                                                                     {% if user.id is not Nones %}
-
-
-
-                                                                     <input type="submit" class="btn btn-secondary"
-                                                                         value="submit">
-                                                                     {% else %}
-                                                                     <h3>You should login first</h3>
-                                                                     {% endif %}
+                                                                 <div class="feedback-btn pb-15">
+                                                                     <a href="#" class="close" data-dismiss="modal"
+                                                                         aria-label="Close">Close</a>
 
                                                                  </div>
-                                                             </form>
+
+                                                                 {% if user.id is not Nones %}
+
+
+
+                                                                 <input type="submit" class="btn btn-secondary"
+                                                                     value="submit">
+                                                                 {% else %}
+                                                                 <h3>You should login first</h3>
+                                                                 {% endif %}
+
+                                                             </div>
+                                                         </form>
                                                          </div>
                                                      </div>
                                                      <!-- Feedback Area End Here -->
@@ -356,7 +296,7 @@
              <div class="col-lg-12">
                  <div class="li-section-title">
                      <h2>
-                         <span>15 other products in the same category:</span>
+                         <span>15 other products in all category:</span>
                      </h2>
                  </div>
                  <div class="row">
@@ -399,10 +339,9 @@
                                      <div class="add-actions">
                                          <ul class="add-actions-link">
                                              <li class="add-cart active"><a href="{%url 'AddtoShopingcart' id=single_product.id %}">Add to cart</a></li>
-                                             <li><a href="#" title="quick view" class="quick-view-btn"
-                                                     data-toggle="modal" data-target="#exampleModalCenter"><i
-                                                         class="fa fa-eye"></i></a></li>
-                                             <li><a class="links-details" href="wishlist.html"><i
+                                             <li><a class="links-details" href="{%url 'orderproduct'%}"><i
+                                                class="fa fa-shopping-cart"></i></a></li>
+                                             <li><a class="links-details" href=""><i
                                                          class="fa fa-heart-o"></i></a></li>
                                          </ul>
                                      </div>

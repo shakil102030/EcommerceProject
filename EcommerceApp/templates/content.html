@@ -1,7 +1,8 @@
 <!-- Begin Product Area -->
 
 {% load static %}
-
+{% load ecomtag %}
+{% ecom_catgoryproducts as allProds %}
 
 <div class="product-area pt-60 pb-50">
     <div class="container">
@@ -65,11 +66,10 @@
                                         <ul class="add-actions-link">
                                             <li class="add-cart active"><a
                                                     href="{%url 'AddtoShopingcart' id=p.id %}">Add to cart</a></li>
-                                            <li><a class="links-details" href="wishlist.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a href="#" title="quick view" class="quick-view-btn"
-                                                    data-toggle="modal" data-target="#exampleModalCenter"><i
-                                                        class="fa fa-eye"></i></a></li>
+                                            <li><a class="links-details" href="{%url 'orderproduct'%}"><i
+                                                class="fa fa-shopping-cart"></i></a></li>
+                                            <li><a class="links-details" href=""><i
+                                                class="fa fa-heart-o"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -128,11 +128,10 @@
                                         <ul class="add-actions-link">
                                             <li class="add-cart active"><a
                                                     href="{%url 'AddtoShopingcart' id=p.id %}">Add to cart</a></li>
-                                            <li><a class="links-details" href="wishlist.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a href="#" title="quick view" class="quick-view-btn"
-                                                    data-toggle="modal" data-target="#exampleModalCenter"><i
-                                                        class="fa fa-eye"></i></a></li>
+                                            <li><a class="links-details" href="{%url 'orderproduct'%}"><i
+                                                class="fa fa-shopping-cart"></i></a></li>
+                                            <li><a class="links-details" href=""><i
+                                                class="fa fa-heart-o"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -149,41 +148,6 @@
 </div>
 </div>
 <!-- Product Area End Here -->
-<!-- Begin Li's Static Banner Area -->
-<div class="li-static-banner">
-    <div class="container">
-        <div class="row">
-            <!-- Begin Single Banner Area -->
-            <div class="col-lg-4 col-md-4 text-center">
-                <div class="single-banner">
-                    <a href="#">
-                        <img src="{%static ''%}images/banner/1_3.jpg" alt="Li's Static Banner">
-                    </a>
-                </div>
-            </div>
-            <!-- Single Banner Area End Here -->
-            <!-- Begin Single Banner Area -->
-            <div class="col-lg-4 col-md-4 text-center pt-xs-30">
-                <div class="single-banner">
-                    <a href="#">
-                        <img src="{%static ''%}images/banner/1_4.jpg" alt="Li's Static Banner">
-                    </a>
-                </div>
-            </div>
-            <!-- Single Banner Area End Here -->
-            <!-- Begin Single Banner Area -->
-            <div class="col-lg-4 col-md-4 text-center pt-xs-30">
-                <div class="single-banner">
-                    <a href="#">
-                        <img src="{%static ''%}images/banner/1_5.jpg" alt="Li's Static Banner">
-                    </a>
-                </div>
-            </div>
-            <!-- Single Banner Area End Here -->
-        </div>
-    </div>
-</div>
-<!-- Li's Static Banner Area End Here -->
 <!-- Begin Li's Laptop Product Area -->
 {% for product in allProds  %}
 <section class="product-area li-laptop-product pt-60 pb-45">
@@ -197,11 +161,6 @@
                         <span>{{product.0.category}}</span>
                         
                     </h2>
-                   {%for p in product%}
-                    <ul class="li-sub-category-list">
-                        <li class="active"><a href="{%url 'product_single' id=p.id%}">{{p.subcategory}}</a></li>
-                    </ul>
-                    {%endfor%}
                 </div>
                 <div class="row">
                     <div class="product-active owl-carousel">
@@ -246,11 +205,10 @@
                                     <div class="add-actions">
                                         <ul class="add-actions-link">
                                             <li class="add-cart active"><a href="{%url 'AddtoShopingcart' id=p.id%}">Add to cart</a></li>
-                                            <li><a class="links-details" href="wishlist.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a href="#" title="quick view" class="quick-view-btn"
-                                                    data-toggle="modal" data-target="#exampleModalCenter"><i
-                                                        class="fa fa-eye"></i></a></li>
+                                            <li><a class="links-details" href="{%url 'orderproduct'%}"><i
+                                                class="fa fa-shopping-cart"></i></a></li>
+                                            <li><a class="links-details" href=""><i
+                                                class="fa fa-heart-o"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>

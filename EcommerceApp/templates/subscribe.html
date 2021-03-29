@@ -1,0 +1,42 @@
+    <!-- Newsletter Section-->
+    <section class="newsletter no-padding-top" id="subscribe">
+		<div class="container">
+		  <div class="row">
+
+
+			{% if request.GET.email_status == 'added' %}
+			<div class="col-md-8">
+			  <h6>Subscribe to Newsletter</h6>
+			  <p class="text-big">Email added !</p>
+			</div>
+  
+			
+			{% elif request.GET.email_status == 'exists' %}
+			<div class="col-md-8">
+			  <h6>Subscribe to Newsletter</h6>
+			  <p class="text-big">Email already exists !</p>
+			</div>
+
+			{% else %}
+			<div class="col-md-8">
+			  <h6>Subscribe to Newsletter</h6>
+			</div>
+			<div class="col-md-8">
+			  <div class="form-holder">
+				<form action="/subscribe" method="POST">
+				  {% csrf_token %}
+				  <div class="form-group">
+					<input name="next" type="hidden" value="{{ request.path}}">
+					<input type="email" name="subs_email" id="email" placeholder="Your email address" required>
+					<button type="submit" class="btn btn-success mt-2">Subscribe</button>
+				  </div>
+				</form>
+			  </div>
+			</div>
+			
+			{% endif %}
+  
+		  </div>
+		  
+		</div>
+	</section>

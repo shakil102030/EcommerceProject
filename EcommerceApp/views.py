@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse, redirect, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect 
 from .models import Setting, ContactMessage, ContactForm, FAQ
 from django.contrib import messages
 from EcommProduct.models import Product, Category, Images, Comment, Variants
@@ -7,114 +7,85 @@ from .models import Setting
 from .forms import SearchForm
 from math import ceil
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.shortcuts import render
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from .models import Subscriber
+import random
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.mail import send_mail, BadHeaderError
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
 
 def Home(request):
-    setting = Setting.objects.get(id=1)
-    category = Category.objects.all()
     sliding_images = Product.objects.all().order_by('id')[:2]
-    current_user  = request.user
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
     products = Product.objects.all()
     sliderproducts  = Product.objects.all().order_by('id')[:2]
     latestproducts = Product.objects.all().order_by('-id')
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-
+    
     context = {
-        'setting': setting,
-        'category': category,
         'sliderproducts': sliderproducts,
         'latestproducts': latestproducts,
         'products': products,
-        'productcart': productcart,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'totalorderquantity':totalorderquantity,
-        'allProds':allProds,
         'sliding_images': sliding_images
     }
     return render(request, 'base.html', context)
 
+
+def subscribe(request):
+    if request.method == 'POST':
+        subs_email = request.POST.get('subs_email', None)
+        next = request.POST.get('next', '/')
+        if subs_email is not None:
+            if Subscriber.objects.filter(email=subs_email).exists():
+                next += '?email_status=exists#subscribe'
+            else:
+                subscriber = Subscriber.objects.create(email=subs_email)
+                subscriber.save()
+                next += '?email_status=added#subscribe'
+    return HttpResponseRedirect(next)
+
+
+def password_reset_request(request):
+	if request.method == "POST":
+		password_reset_form = PasswordResetForm(request.POST)
+		if password_reset_form.is_valid():
+			data = password_reset_form.cleaned_data['email']
+			associated_users = User.objects.filter(Q(email=data))
+			if associated_users.exists():
+				for user in associated_users:
+					subject = "Password Reset Requested"
+					email_template_name = "password_reset_email.txt"
+					c = {
+					"email":user.email,
+					'domain':'127.0.0.1:8000',
+					'site_name': 'Website',
+					"uid": urlsafe_base64_encode(force_bytes(user.pk)),
+					"user": user,
+					'token': default_token_generator.make_token(user),
+					'protocol': 'http',
+					}
+					email = render_to_string(email_template_name, c)
+					try:
+						send_mail(subject, email, 'raziaromi50@gmail.com' , [user.email], fail_silently=False)
+					except BadHeaderError:
+						return HttpResponse('Invalid header found.')
+					return redirect ("/password_reset/done/")
+	password_reset_form = PasswordResetForm()
+	return render(request=request, template_name="password_reset.html", context={"password_reset_form":password_reset_form})
+
+
 def Aboutus(request):
-    setting = Setting.objects.get(id=1)
-
-    
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products = Product.objects.all()
-    sliderproducts  = Product.objects.all().order_by('id')[:2]
-    latestproducts = Product.objects.all().order_by('-id')
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-
-    #-------------------------
-
-
-
-
+    setting = get_object_or_404(Setting, id = 1)
     context = {
-        'setting': setting,
-        
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
-
-
-
+        'setting': setting
     }
     return render(request, 'about.html', context)
 
@@ -131,50 +102,11 @@ def contact(request):
             data.ip = request.META.get('REMOTE_ADDR')
             data.save()
             messages.success(request, 'Profile details updated.')
-
             return redirect('contact_dat')
-
-   # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
     form = ContactForm
-    setting = Setting.objects.get(id=1)
+
     context = {
         'form': form,
-        'setting': setting,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
     }
     return render(request, 'contact_form.html', context)
 
@@ -190,54 +122,14 @@ def searchView(request):
             else:
                 products = Product.objects.filter(
                     title__icontains=query, category_id=cat_id)
-        
-            category = Category.objects.all()
-            setting = Setting.objects.get(id=1)
             sliding_images = Product.objects.all().order_by('id')[:2]
             prouct_catagory = Product.objects.filter(category_id=cat_id).order_by('id')[:4]
-            
-            # TotalOrderQuentity TotalAmount Total Quentity
-            current_user  = request.user
-            order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-            totalorderquantity = 0
-            for p in order_product_cart:
-                totalorderquantity +=  p.quantity
+            prodt_count = Product.objects.filter(category_id=cat_id).count()
 
-
-            productcart = ShopCart.objects.filter(user_id=current_user.id)
-            totalamount = 0
-            for p in productcart:
-                totalamount += p.product.new_price * p.quantity
-
-            totalquantity = 0
-            for p in productcart:
-                totalquantity += p.quantity
-
-            products= Product.objects.all()
-            allProds=[]
-            catprods= Product.objects.values('category', 'id')
-            cats= {item["category"] for item in catprods}
-            
-            for cat in cats:
-                prod=Product.objects.filter(category=cat)
-                allProds.append(prod)
-            #-------------------------
-           
             context = {
-                'category': category,
-                'setting': setting,
                 'prouct_catagory': prouct_catagory,
                 'sliding_images': sliding_images,
-
-                 
-                # TotalOrderQuentity TotalAmount Total Quentity
-                'totalorderquantity':totalorderquantity,
-                'totalamount': totalamount,
-                'totalquantity': totalquantity,
-                'productcart': productcart,
-                'allProds':allProds,
-                #-------------------------
-                
+                'prodt_count': prodt_count,
             }
             return render(request, 'search.html', context)
     return HttpResponseRedirect('/')
@@ -245,60 +137,17 @@ def searchView(request):
 
 
 def product_single(request, id):
-    category = Category.objects.all()
-    setting = Setting.objects.get(id=1)
     single_product = Product.objects.get(id=id)
     images = Images.objects.filter(product_id=id)
     products = Product.objects.all()
     #products = Product.objects.filter(category_id=catid)
     comment_show = Comment.objects.filter(product_id=id, status='True')
-    
-
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-            
-
+        
     context = {
-        'category': category,
-        'setting': setting,
         'single_product': single_product,
         'images': images,
         'products': products,
         'comment_show': comment_show,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
-        
     }
     if single_product.variant != "None":  # Product have variants
         if request.method == 'POST':  # if we select color
@@ -315,7 +164,6 @@ def product_single(request, id):
         context.update({'sizes': sizes, 'colors': colors,
                         'variant': variant, 'query': query,
                         })
-
     return render(request, 'product-single.html', context)
 
 
@@ -327,6 +175,7 @@ def ajaxcolor(request):
         size_id = request.POST.get('size')
         productid = request.POST.get('productid')
         colors = Variants.objects.filter(product_id=productid, size_id=size_id)
+
         context = {
             'size_id': size_id,
             'productid': productid,
@@ -338,111 +187,27 @@ def ajaxcolor(request):
 
 
 def category_product(request, id, slug):
-    category = Category.objects.all()
-    setting = Setting.objects.get(id=1)
     sliding_images = Product.objects.all().order_by('id')[:2]
     prouct_cat = Product.objects.filter(category_id=slug)
+    product_count = Product.objects.filter(category_id=slug).count()
     paginator = Paginator(prouct_cat, 3)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     products= Product.objects.all()
 
-    
-
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
     context = {
-        'category': category,
-        'setting': setting,
         'product_cat': prouct_cat,
         'sliding_images': sliding_images,
         'page_obj':page_obj,
-        
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
+        'product_count': product_count,
     }
     return render(request, 'category_products.html', context)
 
 
-    
-
 def Faq_details(request):
-    category = Category.objects.all()
-    setting = Setting.objects.get(id=1)
     faq = FAQ.objects.filter(status=True).order_by('created_at')
 
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
     context = {
-        'category': category,
-        'setting': setting,
         'faq': faq,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
-
     }
     return render(request, 'faq.html', context)

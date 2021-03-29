@@ -14,10 +14,6 @@ from django.conf import settings
 from django.utils import timezone
 import stripe
 from django.template.context_processors import csrf
-
-
-
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -54,7 +50,7 @@ def AddtoShopingcart(request,id):
             else : # Inser to Shopcart
                 data = ShopCart()
                 data.user_id = current_user.id
-                data.product_id =id
+                data.product_id = id
                 data.variant_id = variantid
                 data.quantity = form.cleaned_data['quantity']
                 data.save()
@@ -85,52 +81,13 @@ def shop_cart(request):
     totalamount = 0
     for p in shop_cart_product:
         totalamount += p.product.new_price*p.quantity
-    
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
     context = {
         'category': category,
         'setting': setting,
         'shop_cart_product': shop_cart_product,
         'totalamount': totalamount,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
-
     }
     return render(request, 'shop_cart.html', context)
-
 
 
 @login_required(login_url='/account/login')
@@ -141,28 +98,6 @@ def delete_from_cart(request, id):
     shop_cart_product.delete()
     messages.warning(request, 'Your product has been deleted.')
     return HttpResponseRedirect(url)
-
-@login_required(login_url='/account/login')
-def update_cart(request, cartID):
-    food = Food.objects.filter(id=cartID)[0]
-    if request.method == "POST":
-        if request.POST['base_price'] != "":
-            food.base_price = request.POST['base_price']
-        
-        if request.POST['discount'] != "":
-            food.discount = request.POST['discount'] 
-        if request.POST['base_price'] != "":
-            food.base_price = request.POST['base_price']
-
-        status = request.POST.get('Out Stock')
-        print(status)
-        if status == 'on':
-            food.status = "Out Stock"
-        else:
-            food.status = "In Stock"
-        
-        food.save()
-    return redirect('foods_admin')
 
 
 @login_required(login_url='/account/login')
@@ -179,7 +114,6 @@ def OrderCart(request):
         print("checkout...")
         if form.is_valid() and payment_form.is_valid():
             dat = Order()
-            # get product quantity from form
             dat.first_name = form.cleaned_data['first_name']
             dat.last_name = form.cleaned_data['last_name']
             dat.email = form.cleaned_data['email']
@@ -197,7 +131,7 @@ def OrderCart(request):
             dat.code = ordercode
             dat.save()
             form = OderForm()
-            # moving data shortcart to product cart
+
             for rs in shoping_cart:
                 data = OderProduct()
                 data.order_id = dat.id
@@ -243,11 +177,7 @@ def OrderCart(request):
                     },
                     amount=total_amount*100,
                     currency='usd',
-                    #payment_method_types=['card'],
-                    card=payment_form.cleaned_data['stripe_id'],
-                    
-                    #mode='payment',
-                    
+                    card=payment_form.cleaned_data['stripe_id'],    
                 )
             except stripe.error.CardError:
                 messages.error(request, "Your card was declined!")
@@ -255,11 +185,9 @@ def OrderCart(request):
             if customer.paid:
                 print("Customer has paid...")
                 messages.error(request, "You have successfully paid")
-                #return redirect(reverse('home'))
                 return render(request, 'oder_completed.html', context)
             else:
                 messages.error(request, "Unable to take payment")
-                #return redirect(reverse('home'))
         else:
             print("There are errors...")
             print(payment_form.errors)
@@ -274,37 +202,10 @@ def OrderCart(request):
     category = Category.objects.all()
     setting = Setting.objects.get(id=1)
 
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
+   
 
     
     context = {
-        # 'category':category,
         'shoping_cart': shoping_cart,
         'totalamount': totalamount,
         'profile': profile,
@@ -312,17 +213,7 @@ def OrderCart(request):
         'setting': setting,
         'total_amount': total_amount,
         "payment_form": payment_form,
-        "publishable": settings.STRIPE_PUBLISHABLE_KEY,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
-
-        
+        "publishable": settings.STRIPE_PUBLISHABLE_KEY, 
     }
     return render(request, "order_form.html", context)
     
@@ -334,51 +225,11 @@ def Order_showing(request):
     setting = Setting.objects.get(id=1)
     current_user = request.user
     orders = Order.objects.filter(user_id=current_user.id)
-
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
-
     context = {
         'category': category,
         'setting': setting,
         'orders': orders,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
-
     }
-
     return render(request, 'user_order_showing.html', context)
 
 
@@ -389,50 +240,11 @@ def user_oder_details(request, id):
     current_user = request.user
     order = Order.objects.get(user_id=current_user.id, id=id)
     order_products = OderProduct.objects.filter(order_id=id)
-
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
-
     context = {
-
         'order': order,
         'order_products': order_products,
         'category': category,
         'setting': setting,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
     }
     return render(request, 'user_order_details.html', context)
 
@@ -442,49 +254,10 @@ def Order_Product_showing(request):
     setting = Setting.objects.get(id=1)
     current_user = request.user
     order_product = OderProduct.objects.filter(user_id=current_user.id)
-
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
-
     context = {
         'category': category,
         'setting': setting,
         'order_product': order_product,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
-
     }
 
     return render(request, 'OrderProducList.html', context)
@@ -497,50 +270,11 @@ def useroderproduct_details(request, id, oid):
     current_user = request.user
     order = Order.objects.get(user_id=current_user.id, id=oid)
     order_products = OderProduct.objects.get(user_id=current_user.id, id=id)
-
-    # TotalOrderQuentity TotalAmount Total Quentity
-    current_user  = request.user
-    order_product_cart = OderProduct.objects.filter(user_id=current_user.id)
-    totalorderquantity = 0
-    for p in order_product_cart:
-        totalorderquantity +=  p.quantity
-
-
-    productcart = ShopCart.objects.filter(user_id=current_user.id)
-    totalamount = 0
-    for p in productcart:
-        totalamount += p.product.new_price * p.quantity
-
-    totalquantity = 0
-    for p in productcart:
-        totalquantity += p.quantity
-    
-    products= Product.objects.all()
-    allProds=[]
-    catprods= Product.objects.values('category', 'id')
-    cats= {item["category"] for item in catprods}
-    
-    for cat in cats:
-        prod=Product.objects.filter(category=cat)
-        allProds.append(prod)
-
-    #-------------------------
-
-
     context = {
-
         'order': order,
         'order_products': order_products,
         'category': category,
-        'setting': setting,
-
-        # TotalOrderQuentity TotalAmount Total Quentity
-        'totalorderquantity':totalorderquantity,
-        'totalamount': totalamount,
-        'totalquantity': totalquantity,
-        'productcart': productcart,
-        'allProds':allProds,
-        #-------------------------
+        'setting': setting, 
     }
     return render(request, 'user_order_pro_details.html', context)
 

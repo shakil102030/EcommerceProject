@@ -3,7 +3,7 @@ from django import forms
 class MakePaymentForm(forms.Form):
     """ Payment Form """
     MONTH_CHOICES = [(i, i) for i in range(1, 13)]
-    YEAR_CHOICES = [(i, i) for i in range(2021, 2031)]
+    YEAR_CHOICES = [(i, i) for i in range(2020, 2031)]
 
     credit_card_number = forms.CharField(label='Credit card number', required=False)
     cvv = forms.CharField(label='Security code (CVV)', required=False)

@@ -64,58 +64,12 @@ single product
 <div class="checkout-area pt-60 pb-30">
     <div class="container">
         <div class="row">
-            <div class="col-12">
-                <div class="coupon-accordion">
-                    <!--Accordion Start-->
-                    <h3>Returning customer? <span id="showlogin">Click here to login</span></h3>
-                    <div id="checkout-login" class="coupon-content">
-                        <div class="coupon-info">
-                            <p class="coupon-text">Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed
-                                est sit amet ipsum luctus.</p>
-                            <form action="#">
-                                <p class="form-row-first">
-                                    <label>Username or email <span class="required">*</span></label>
-                                    <input type="text">
-                                </p>
-                                <p class="form-row-last">
-                                    <label>Password <span class="required">*</span></label>
-                                    <input type="text">
-                                </p>
-                                <p class="form-row">
-                                    <input value="Login" type="submit">
-                                    <label>
-                                        <input type="checkbox">
-                                        Remember me
-                                    </label>
-                                </p>
-                                <p class="lost-password"><a href="#">Lost your password?</a></p>
-                            </form>
-                        </div>
-                    </div>
-                    <!--Accordion End-->
-                    <!--Accordion Start-->
-                    <h3>Have a coupon? <span id="showcoupon">Click here to enter your code</span></h3>
-                    <div id="checkout_coupon" class="coupon-checkout-content">
-                        <div class="coupon-info">
-                            <form action="#">
-                                <p class="checkout-coupon">
-                                    <input placeholder="Coupon code" type="text">
-                                    <input value="Apply Coupon" type="submit">
-                                </p>
-                            </form>
-                        </div>
-                    </div>
-                    <!--Accordion End-->
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-lg-6 col-12">
                 
                 <form role='form' method='POST' enctype="multipart/form-data" id="payment-form" action="{% url 'OrderCart' %}">
                     {% csrf_token %}
 
-                    <legend class="center-text">Payment Details</legend>
+                    <legend class="center-text"><h4>Stripe Payment Details</h4></legend>
                     <div class="credit-card-errors" style="display: none;">
                         <div id="alert-message block-message error" id="stripe-error-message"></div>
                     </div>
@@ -128,7 +82,7 @@ single product
                    
                     
                     <div class="checkbox-form">
-                        <h3>Billing Address</h3>
+                        <h4>Billing Address</h4>
                         <div class="row">
                            
                             
@@ -162,7 +116,7 @@ single product
                             <div class="col-md-12">
                                 <div class="checkout-form-list">
                                     <label>Town / City <span class="required">*</span></label>
-                                    <input type="text" value="{{profile.city}}" name="city">
+                                    <input placeholder="Town/City" type="text" value="{{profile.city}}" name="city">
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -467,7 +421,7 @@ single product
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Phone <span class="required">*</span></label>
-                                    <input type="text" value="{{profile.phone}}" name="phone">
+                                    <input placeholder="Phone" type="text" value="{{profile.phone}}" name="phone">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -479,7 +433,7 @@ single product
                             <div class="col-md-12">
                                 <div class="checkout-form-list">
                                     <label>Description <span class="required">*</span></label>
-                                    <input type="text" value="{{profile.description}}" name="description">
+                                    <input placeholder="Description" type="text" value="{{profile.description}}" name="description">
                                 </div>
                             </div>
 
@@ -532,45 +486,11 @@ single product
                         <div class="payment-accordion">
                             <div id="accordion">
                                 <div class="card">
-                                    <div class="card-header" id="#payment-1">
-                                        <h5 class="panel-title">
-                                            <a class="" data-toggle="collapse" data-target="#collapseOne"
-                                                aria-expanded="true" aria-controls="collapseOne">
-                                                Direct Bank Transfer.
-                                            </a>
-                                        </h5>
-                                    </div>
-                                    <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <p>Make your payment directly into our bank account. Please use your
-                                                Order ID as the payment reference. Your order won’t be shipped until
-                                                the funds have cleared in our account.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-header" id="#payment-2">
-                                        <h5 class="panel-title">
-                                            <a class="collapsed" data-toggle="collapse" data-target="#collapseTwo"
-                                                aria-expanded="false" aria-controls="collapseTwo">
-                                                Cheque Payment
-                                            </a>
-                                        </h5>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <p>Make your payment directly into our bank account. Please use your
-                                                Order ID as the payment reference. Your order won’t be shipped until
-                                                the funds have cleared in our account.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
                                     <div class="card-header" id="#payment-3">
                                         <h5 class="panel-title">
                                             <a class="collapsed" data-toggle="collapse" data-target="#collapseThree"
                                                 aria-expanded="false" aria-controls="collapseThree">
-                                                Stripe
+                                                Stripe Payment
                                             </a>
                                         </h5>
                                     </div>

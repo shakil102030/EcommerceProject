@@ -21,16 +21,13 @@ def UserSignUp(request):
             user.username = user.email.split('@')[0]
             user.set_password(form.cleaned_data['password'])
             user.save()
-
+            userprofile = UserProfile.objects.create(user=user, image="images/users/user.jpg")
+            userprofile.save()
             return redirect('UserLogin')
         else:
             messages.warning(request, "Your new and reset password is not matching")
-        
     else:
         form = SignUpForm(),
-
-     
-        
     return render(request, 'signup.html', {'form': form})
 
 def UserLogin(request):
@@ -55,14 +52,12 @@ def UserLogout(request):
     logout(request)
     return redirect('home')
 
-
-
-
+@login_required(login_url='/account/login')
 def userProfile(request):
     category = Category.objects.all()
     setting = get_object_or_404(Setting, id=1)
     current_user = request.user
-    profile = UserProfile.objects.get(id=current_user.id)
+    profile = UserProfile.objects.get(user_id=current_user.id)
 
     context = {'category': category,
                'setting': setting,
@@ -73,7 +68,6 @@ def userProfile(request):
 @login_required(login_url='/account/login')  # Check login
 def userUpdate(request):
     if request.method == 'POST':
-        # request.user is user  data
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(
             request.POST, request.FILES, instance=request.user.userprofile)
@@ -83,14 +77,11 @@ def userUpdate(request):
             messages.success(request, 'Your account has been updated!')
             return redirect('userprofile')
     else:
-       # category = Category.objects.all()
         user_form = UserUpdateForm(instance=request.user)
-        # "userprofile" model -> OneToOneField relatinon with user
         profile_form = ProfileUpdateForm(instance=request.user)
         category = Category.objects.all()
         setting = Setting.objects.get(id=1)
         context = {
-            # 'category': category,
             'user_form': user_form,
             'profile_form': profile_form,
             'category': category,
@@ -120,7 +111,6 @@ def UserPassword(request):
         context = {'form': form,'category': category,'setting': setting,}
         return render(request, 'userpasswordupdate.html', context)
 
-
 @login_required(login_url='/account/login')
 def UserComments(request):
     category = Category.objects.all()
@@ -130,8 +120,7 @@ def UserComments(request):
     context = {
         'category': category,
         'setting': setting,
-        'comment': comment
-
+        'comment': comment,
     }
     return render(request, 'usercomment.html', context)
 

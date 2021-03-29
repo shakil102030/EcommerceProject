@@ -5,8 +5,6 @@ from django.forms import ModelForm
 from django.utils.safestring import mark_safe
 
 
-
-
 class ShopCart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -44,10 +42,6 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled')
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    card_num = models.CharField(max_length=200)
-    cvv = models.CharField(max_length=200)
-    expiry_month = models.CharField(max_length=200)
-    expiry_year = models.CharField(max_length=200)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200)
@@ -102,4 +96,6 @@ class OderProduct(models.Model):
 
     def amountnow(self):
         return self.price*self.quantity
+
+
 

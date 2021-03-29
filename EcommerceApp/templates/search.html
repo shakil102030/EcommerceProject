@@ -1,23 +1,14 @@
 {%extends 'home.html'%}
 {%load static%}
-
-
 {% block titlee %}
-single product
-         
+    single product
 {% endblock titlee %}
-
-
-
 {% block description %}
-{{setting.description}}
-     
- {% endblock description %}
-
-
- {% block keyword %}
-     
- {% endblock keyword %}
+    {{setting.description}}
+{% endblock description %}
+{% block keyword %}
+            
+{% endblock keyword %}
  {% block slider %}
     {% include "slider.html" %}
 {%endblock%}
@@ -51,25 +42,10 @@ single product
                                         <!-- shop-item-filter-list end -->
                                     </div>
                                     <div class="toolbar-amount">
-                                        <span>Showing 1 to 4 of 15</span>
+                                        <span>Showing 1 to {{prodt_count}} of 15</span>
                                     </div>
                                 </div>
-                                <!-- product-select-box start -->
-                                <div class="product-select-box">
-                                    <div class="product-short">
-                                        <p>Sort By:</p>
-                                        <select class="nice-select">
-                                            <option value="trending">Relevance</option>
-                                            <option value="sales">Name (A - Z)</option>
-                                            <option value="sales">Name (Z - A)</option>
-                                            <option value="rating">Price (Low &gt; High)</option>
-                                            <option value="date">Rating (Lowest)</option>
-                                            <option value="price-asc">Model (A - Z)</option>
-                                            <option value="price-asc">Model (Z - A)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!-- product-select-box end -->
+                                
                             </div>
                             <!-- shop-top-bar end -->
                             <!-- shop-products-wrapper start -->
@@ -114,8 +90,9 @@ single product
                                                             <div class="add-actions">
                                                                 <ul class="add-actions-link">
                                                                     <li class="add-cart active"><a href="{%url 'AddtoShopingcart' id=p.id%}">Add to cart</a></li>
-                                                                    <li><a href="#" title="quick view" class="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-eye"></i></a></li>
-                                                                    <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
+                                                                    <li><a class="links-details" href="{%url 'orderproduct'%}"><i
+                                                                           class="fa fa-shopping-cart"></i></a></li>
+                                                                    <li><a class="links-details" href=""><i class="fa fa-heart-o"></i></a></li>
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -169,8 +146,8 @@ single product
                                                         <div class="shop-add-action mb-xs-30">
                                                             <ul class="add-actions-link">
                                                                 <li class="add-cart"><a href="{%url 'AddtoShopingcart' id=p.id%}">Add to cart</a></li>
-                                                                <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                                <li><a class="quick-view" data-toggle="modal" data-target="#exampleModalCenter" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
+                                                                <li class="wishlist"><a href=""><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
+                                                                 
                                                             </ul>
                                                         </div>
                                                     </div>

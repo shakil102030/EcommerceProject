@@ -3,22 +3,29 @@ from django.utils.safestring import mark_safe
 from EcommProduct.models import Category
 from django.contrib.auth.models import User
 from django import forms
-#from dbarray import IntegerArrayField
+
+
 
 class BlogGrid(models.Model):
     STATUS = (
-        ('True', 'True'),
-        ('False', 'False'),
+    ("Draft","Draft"),
+    ("Publish","Publish"),
     )
 
     title = models.CharField(max_length = 200)
     blogcategory = models.ForeignKey(Category, on_delete = models.CASCADE)
     author = models.ForeignKey(User, on_delete = models.CASCADE)
-    image = models.ImageField(upload_to = 'blog/')
+    content = models.TextField()
+    image = models.ImageField(upload_to = 'blog/blog_grid_img')
     details = models.TextField()
+    tags = models.CharField(max_length=25)
     status = models.CharField(max_length = 40, choices = STATUS)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        ordering = ['-created_at']
+
 
     def __str__(self):
         return self.title
@@ -61,4 +68,7 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('content',)
+
+
+    
 
