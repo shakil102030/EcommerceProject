@@ -1,27 +1,17 @@
-  
-  {%extends 'home.html'%}
-
+{%extends 'home.html'%}
 {%load static%}
-
-
-
-    {% block titlee %}
-       single product
-                
-     {% endblock titlee %}
-
-
-
-     {% block description %}
-     {{setting.description}}
+{% block titlee %}
+    single product        
+{% endblock titlee %}
+{% block description %}
+   {{setting.description}}
+{% endblock description %}
+{% block keyword %}
             
-        {% endblock description %}
+{% endblock keyword %}
 
 
-        {% block keyword %}
-            
-        {% endblock keyword %}
-
+        
 
 
            
